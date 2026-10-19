@@ -1,0 +1,26 @@
+{
+  "_comment": "DataForSEO spend guard. Estimates are conservative per-task USD figures; actual cost from API responses is logged to research/_costs.jsonl and wins over estimates. Verify against https://dataforseo.com/pricing when editing.",
+  "monthly_cap_usd": 10.0,
+  "ask_above_usd": 0.5,
+  "blocked_path_patterns": [
+    "^/v3/backlinks/",
+    "/priority",
+    "^/v3/on_page/lighthouse"
+  ],
+  "blocked_reason": "Backlinks API needs a $100/month subscription; priority queue and Lighthouse are out of budget scope.",
+  "estimates": [
+    {"pattern": "^/v3/app_data/.*/app_listings/", "usd": 0.2},
+    {"pattern": "^/v3/app_data/.*/app_reviews/task_post", "usd": 0.005},
+    {"pattern": "^/v3/app_data/.*/task_post", "usd": 0.005},
+    {"pattern": "^/v3/keywords_data/google_ads/.*/live", "usd": 0.075},
+    {"pattern": "^/v3/keywords_data/google_ads/.*/task_post", "usd": 0.05},
+    {"pattern": "^/v3/keywords_data/google_trends/", "usd": 0.02},
+    {"pattern": "^/v3/keywords_data/dataforseo_trends/", "usd": 0.02},
+    {"pattern": "^/v3/serp/.*/live/", "usd": 0.004},
+    {"pattern": "^/v3/serp/.*/task_post", "usd": 0.002},
+    {"pattern": "^/v3/dataforseo_labs/", "usd": 0.03},
+    {"pattern": "^/v3/content_analysis/", "usd": 0.03},
+    {"pattern": "^/v3/appendix/", "usd": 0.0}
+  ],
+  "default_usd": 0.05
+}

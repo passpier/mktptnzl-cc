@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Weekly free competitor snapshot (Mondays 09:00). Template: rendered by scripts/install-launchd.sh with this machine's uv and repo path. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.marketing-research.snapshot</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__UV__</string>
+    <string>run</string>
+    <string>--project</string>
+    <string>__ROOT__</string>
+    <string>__ROOT__/scripts/snapshot.py</string>
+    <string>take</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__ROOT__</string>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>9</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__ROOT__/research/_tracking/snapshot.log</string>
+  <key>StandardErrorPath</key>
+  <string>__ROOT__/research/_tracking/snapshot.log</string>
+</dict>
+</plist>

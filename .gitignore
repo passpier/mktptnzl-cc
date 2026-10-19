@@ -1,0 +1,24 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+# research data stays local (raw scrapes may contain third-party content)
+research/*
+!research/.gitkeep
+.claude/settings.local.json
+# per-project product context and competitor list stay local; setup.sh creates them from the committed templates
+.agents/product-marketing.md
+config/tracking.json
+# third-party marketingskills: not redistributed; restore from skills-lock.json with `npx skills experimental_install`
+.claude/skills/aso/
+.claude/skills/community-marketing/
+.claude/skills/competitor-profiling/
+.claude/skills/customer-research/
+.claude/skills/directory-submissions/
+.claude/skills/launch/
+.claude/skills/marketing-council/
+.claude/skills/marketing-ideas/
+.claude/skills/paywalls/
+.claude/skills/pricing/
+.claude/skills/product-marketing/

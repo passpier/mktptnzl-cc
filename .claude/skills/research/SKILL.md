@@ -1,0 +1,99 @@
+---
+name: research
+description: Entry point for app market & marketing research with fresh, first-party, graded evidence. Use for "/research", validating an app idea (點子驗證, 市場潛力, go/no-go), researching an existing app's marketing (行銷, ASO, 競品, 評論), finding niches or opportunities (找利基, 新機會, 市場缺口), or refreshing an earlier study ("refresh", "更新資料"). Modes - idea, app, niche, refresh.
+metadata:
+  version: 1.0.0
+---
+
+# Research — App 市場與行銷研究
+
+This skill runs the whole study, from intake to an audited report. Load `source-grading` first; its rules apply to every step below.
+
+## Modes
+
+| Command | Use for | Core skills |
+|---|---|---|
+| `/research idea "<one-line idea>"` | Pre-build idea validation → go / pivot / no-go | opportunity-scan → review-mining → demand-signals → lean-gtm (short) |
+| `/research app <apple:id\|gplay:id>` | Marketing for a live app | review-mining → demand-signals → lean-gtm (full) |
+| `/research niche "<category or audience>"` | Hunting for gaps | opportunity-scan (charts + stale incumbents) → review-mining |
+| `/research refresh <slug>` | Re-fetch only stale evidence, then re-validate the report | `ledger.py stale`, then the original methods |
+
+`niche` has no single product to market, so its report leaves out the GTM section. Reachability is covered by the Solo-reachability score. Run `/research idea` on the chosen gap to get channels.
+
+Markets default to **TW and US**, both stores. Keep them in separate columns throughout.
+
+## Step 1 — Intake (≤5 questions, skip what is already known)
+
+1. Create a `slug` (lowercase-kebab, e.g. `tw-expense-tracker`). Create `research/<slug>/brief.md`.
+2. Read `.agents/product-marketing.md`. If it's empty or the product differs, fill or update it. Use the marketingskills `product-marketing` skill if it's installed; otherwise ask the user about product, audience, problem, and alternatives.
+3. Ask only what changes the plan: target market(s), the user's unfair advantage (skills, audience, distribution), monetization intent, and time budget.
+
+## Step 2 — Kill criteria first（先定放棄條件）
+
+Write 3–5 falsifiable go/no-go thresholds into `brief.md` **before** collecting any data, and get the user's agreement on them. This prevents confirmation bias. Examples:
+- top 10 search results: ≥7 updated within 12 months AND avg rating ≥4.6 → saturated, no-go unless there's a sharp wedge
+- zero apps in the genre's top-grossing 100 in either market → monetization unproven
+- 1–3★ reviews show no recurring complaint cluster with ≥15% share → no obvious gap
+- Google volume for core terms near zero AND App Store hints don't autocomplete the term → demand unproven
+
+## Step 3 — Plan and budget
+
+List the fetches. Free first-party sources come first, then DataForSEO only where free sources can't answer.
+- Estimate the DataForSEO cost from [references/dataforseo.md](references/dataforseo.md) and show the total to the user.
+- Typical study: **US$0.10–1.00**. The monthly cap is US$10, enforced by a hook.
+- Check `uv run scripts/ledger.py costs` for this month's spend.
+
+## Step 4 — Collect (delegate to subagents, run them in parallel)
+
+- **store-collector** gathers store data, both stores × TW/US:
+  - search the core terms (`apple.py search`, `gplay.py search`)
+  - `apple.py hints`
+  - genre charts: top-free and top-grossing
+  - lookup the top 5–8 competitors per store
+  - reviews for the top 3–5 (1–3★ prioritised on Google Play)
+  - add competitors to `config/tracking.json` and run `snapshot.py take`
+- **web-collector** gathers everything off-store:
+  - DataForSEO keyword volume and Trends
+  - competitor sites, pricing, and paywalls via crawl4ai
+  - Reddit/Dcard threads via crawl4ai
+  - `community.py hn/ptt`
+  - founder/official posts (tier A)
+  - Google Play charts through DataForSEO, only if needed
+- Both return short digests plus E# lists. Raw data stays on disk.
+
+## Step 5 — Synthesize
+
+Run the core skills for the mode (table above). Each skill writes its section with `[E#]` citations.
+
+## Step 6 — Audit
+
+Send the draft to **evidence-auditor**, which argues the opposite case.
+- Fix every `fail` item.
+- Answer each devil's-advocate point in the report, either by addressing it or by noting it under 資料缺口.
+
+## Step 7 — Write the report
+
+1. Write `research/<slug>/report.md` from [references/report-template.md](references/report-template.md).
+2. Generate the appendix:
+   ```
+   uv run scripts/ledger.py render <slug> --report research/<slug>/report.md
+   ```
+3. Paste the appendix under 來源附錄.
+4. The PostToolUse hook validates the report on every save. Fix all errors until it passes, and say which warnings remain.
+
+## Step 8 — Close the loop
+
+The report ends with **1–3 validation experiments** (the cheapest primary data). Each one needs: hypothesis, setup, cost, duration, success threshold, and kill threshold.
+
+| Experiment | Cost | Measures |
+|---|---|---|
+| Landing page + waitlist, posted to PTT/Dcard/Reddit/Threads | US$0–10 | Problem resonance (sign-up rate) |
+| Fake-door or pricing page with 2 price points | US$0 | Willingness to pay (click-through to price) |
+| Apple Search Ads, exact match on 5–10 core terms, US$20–30 cap | US$20–30 | Real in-store demand (impressions), TTR, CPT |
+| 5 user interviews recruited from review authors' communities | time only | Jobs-to-be-done and switching triggers |
+
+When the user reports results, record them with `ledger.py add --tier S --group own-experiment --kind experiment` and re-run the verdict.
+
+## Recurring tracking (optional)
+
+The weekly free snapshots build first-party momentum data over time. See `config/launchd/README.md`.

@@ -1,0 +1,17 @@
+{
+  "_comment": "Competitors tracked weekly by scripts/snapshot.py take. store: apple | gplay. Add apps as research projects identify them. scripts/setup.sh copies this file to config/tracking.json (gitignored) if it doesn't exist.",
+  "apps": [
+    {
+      "store": "apple",
+      "id": "866450515",
+      "country": "tw",
+      "label": "Forest (example)"
+    },
+    {
+      "store": "gplay",
+      "id": "cc.forestapp",
+      "country": "tw",
+      "label": "Forest (example)"
+    }
+  ]
+}
