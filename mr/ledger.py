@@ -36,6 +36,8 @@ TTL_POLICY: dict[str, tuple[int, str]] = {
     "serp": (30, "warn"),
     "community": (90, "warn"),
     "market_report": (730, "block"),
+    "population": (1825, "warn"),
+    "policy": (180, "warn"),
     "experiment": (180, "warn"),
     "other": (30, "warn"),
 }
@@ -99,6 +101,8 @@ def add(slug: str, *, kind: str, claim: str, value: Any, tier: str, source_url: 
 
 def _parse_when(s: str) -> datetime:
     s = s.strip()
+    if len(s) == 4:  # YYYY (e.g. a survey year) -> Jan 1, strict like YYYY-MM below
+        s += "-01"
     if len(s) == 7:  # YYYY-MM -> end of that month is generous; use the 1st to stay strict
         s += "-01"
     if len(s) == 10:

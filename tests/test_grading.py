@@ -103,6 +103,32 @@ def test_tier_c_warns(research):
     assert res.ok and any("tier C" in w for w in res.warnings)
 
 
+
+def test_idea_report_without_viability_warns(research):
+    _row("p")
+    _row("p", source_group="google-play")
+    path = research / "p" / "report.md"
+    path.write_text(GOOD.replace("# 報告", "# 報告\n> 模式：idea"), encoding="utf-8")
+    res = check_report(path)
+    assert res.ok and any("可行性" in w for w in res.warnings)
+    path.write_text(GOOD.replace("# 報告", "# 報告\n> 模式：idea") + "## 可行性評估\n- 待實驗\n", encoding="utf-8")
+    assert not any("可行性" in w for w in check_report(path).warnings)
+    path.write_text(GOOD, encoding="utf-8")
+    assert not any("可行性" in w for w in check_report(path).warnings)
+
+
+def test_population_and_policy_ttl(research):
+    at = common.now()
+    three_years = (at.date() - timedelta(days=3 * 365)).isoformat()
+    pop = _row("p", kind="population", tier="A", data_as_of=three_years)
+    pol = _row("p", kind="policy", tier="A", data_as_of=(at.date() - timedelta(days=200)).isoformat())
+    stale = {s.id: s for s in ledger.stale_rows("p")}
+    assert pop not in stale  # a 3-year-old census survey is still usable
+    assert stale[pol].severity == "warn"
+    year_only = _row("p", kind="population", tier="A", data_as_of=str(at.year - 6))  # docs allow `--as-of 2025`
+    assert {s.id: s for s in ledger.stale_rows("p")}[year_only].severity == "warn"
+
+
 CFG = {
     "monthly_cap_usd": 10.0, "ask_above_usd": 0.5, "blocked_path_patterns": ["^/v3/backlinks/"],
     "blocked_reason": "subscription", "estimates": [{"pattern": "app_listings", "usd": 0.5}], "default_usd": 0.05,

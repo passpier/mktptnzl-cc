@@ -46,7 +46,7 @@ def cmd_search(a):
     raw = save_raw(a.slug, f"apple_search_{a.country}_{a.term}", results)
     top = [stores.apple_metrics(r) for r in results]
     slim = [{"pos": i, "id": t["id"], "name": t["name"], "ratings": t["ratings"], "avg": t["avg_rating"],
-             "updated": t["current_version_date"], "price": t["price"]} for i, t in enumerate(top, 1)]
+             "updated": t["current_version_date"], "released": t["first_release"], "price": t["price"]} for i, t in enumerate(top, 1)]
     eid = ledger.add(a.slug, kind="serp", claim=f"iTunes Search「{a.term}」{a.country.upper()} 結果", value=slim,
                      tier="S", source_url=f"https://itunes.apple.com/search?term={a.term}&country={a.country}&entity=software",
                      source_group=GROUP, method="scripts/apple.py search", data_as_of=date.today().isoformat(),

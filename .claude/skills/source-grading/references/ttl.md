@@ -16,6 +16,8 @@ The source of truth is `TTL_POLICY` in `mr/ledger.py`. If you change this table,
 | serp | 30d | warn | Search results and autocomplete shift, but slowly for most niches |
 | community | 90d | warn | Discussion counts are directional |
 | market_report | 730d | block | Over 2 years old misses the AI-era shifts in most categories; over 1 year old should be flagged in prose |
+| population | 1825d | warn | Government or association surveys of how many people do X (play an instrument, take an exam). Base rates move slowly and many surveys run only every few years. Not for market-size or revenue reports: those stay `market_report` |
+| policy | 180d | warn | App Review Guidelines, store policies, commission programs. They change a few times a year; re-fetch before acting on one |
 | experiment | 180d | warn | Your own test results age as the product and market change |
 | other | 30d | warn | Default: be conservative |
 

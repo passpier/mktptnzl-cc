@@ -22,12 +22,13 @@ A local research agent for app market potential and low-budget marketing, built 
 |---|---|
 | `scripts/apple.py`, `gplay.py`, `community.py`, `snapshot.py` | Free data collectors. Each writes `raw/` plus ledger rows. Run them with `uv run`; `--help` lists options |
 | `scripts/ledger.py` | `add`, `list`, `stale`, `render`, `costs` |
+| `scripts/econ.py` | Break-even thresholds and experiment readability (`breakeven`, `payers`, `power`, `asa-check`). Writes no ledger rows |
 | `mr/` | Core library: ledger and TTL policy, report checks, budget, store clients |
 | `hooks/` | Report validator, DataForSEO budget guard, cost logger (wired in `.claude/settings.json`) |
 | `config/budget.json` | DataForSEO cap, estimates, blocked endpoints |
 | `config/tracking.json` | Competitors for weekly snapshots (local, gitignored; created by `setup.sh` from `tracking.example.json`) |
 | `.agents/product-marketing.md` | Product context shared by marketingskills; `app-marketing-context.md` is a symlink for the global ASO skills (local, gitignored; created by `setup.sh` from `product-marketing.template.md`) |
-| `.claude/skills/` | `research` (entry), `source-grading` (rules), `opportunity-scan`, `review-mining`, `demand-signals`, `lean-gtm` |
+| `.claude/skills/` | `research` (entry), `source-grading` (rules), `opportunity-scan`, `review-mining`, `demand-signals`, `viability-check`, `lean-gtm` |
 | `.claude/agents/` | `store-collector`, `web-collector`, `evidence-auditor` |
 | `research/<slug>/` | `brief.md`, `evidence.jsonl`, `raw/`, `report.md` |
 

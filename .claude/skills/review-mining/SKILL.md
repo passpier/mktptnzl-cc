@@ -29,6 +29,10 @@ Each command writes one ledger row (the sample summary) and saves the full text 
    - **Switching trigger**: "I moved from X because…" / "looking for alternative to…".
    - **Wished-for feature**: "I wish it could…" / "希望可以…".
    - **Job-to-be-done**: what the user was trying to accomplish when it failed.
+   - Also tag these secondary codes, on **all** star levels, because they feed `viability-check`:
+     - `tenure`: how long or how often the reviewer has used it ("used it for 2 years", "every day", "每天練"). This is a retention proxy.
+     - `quit`: why they stopped or plan to stop. Use plateau, boredom, goal reached, or exam over. Goal-reached and seasonal quits cap subscription lifetime.
+     - `price`: explicit price or value statements ("worth every penny", "$X is too much", "would pay for…"). Record the amount when one is stated. This is a willingness-to-pay proxy.
 3. **Quantify**: each cluster's share of coded reviews, per app and per market.
    - Record each cluster table as a ledger row: `--kind review --tier S --group apple|google-play --method "review-mining coding of raw/<file>"`, with value = {cluster: share, n: total}.
    - Keep Apple and Google Play as separate rows so they can corroborate each other as independent groups.
@@ -38,6 +42,7 @@ Each command writes one ledger row (the sample summary) and saves the full text 
 ## Output (section of the report)
 
 - Table with columns: cluster | TW share | US share | example quote | fixable by solo dev? | [E#]
+- Secondary-code shares (`tenure`, `quit` by reason, `price`) per app, with 1–2 verbatims each, as their own ledger row. `viability-check` cites them.
 - Top 3 gaps, ranked by (share × fixability × how often it shows up as a switching trigger).
 - Bias note: what the review sample over- and under-represents. Example: "1–3★ filtered; RSS caps 500; vocal users".
 - Hand-offs:
@@ -47,4 +52,4 @@ Each command writes one ledger row (the sample summary) and saves the full text 
 
 ## Related skills
 
-opportunity-scan (Gap score), lean-gtm (messaging), demand-signals (do the complaint terms also show up in search?).
+opportunity-scan (Gap score), viability-check (retention and willingness-to-pay proxies), lean-gtm (messaging), demand-signals (do the complaint terms also show up in search?).

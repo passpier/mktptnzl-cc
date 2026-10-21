@@ -9,6 +9,7 @@ Rules enforced:
      and >=1 fresh S/A/B row.
   5. Tier D cited outside the data-gap section -> error. Tier C cited anywhere -> warning (trace it).
   6. Required sections: 信心 (confidence), 資料缺口 (data gaps), 驗證實驗 (validation experiments).
+  7. idea-mode reports without a 可行性 (viability) section -> warning.
 """
 
 from __future__ import annotations
@@ -39,6 +40,8 @@ SECTION_KEYS = {
     "exempt": ("放棄條件", "kill criteria", "驗證實驗", "experiment", "來源附錄", "appendix", "sources"),
     "gaps": ("資料缺口", "data gap"),
 }
+IDEA_MODE = re.compile(r"模式\s*[:：]\s*idea|mode\s*[:：]\s*idea", re.I)
+VIABILITY = ("可行性", "viability")
 REQUIRED = {
     "信心等級": ("信心", "confidence"),
     "資料缺口": ("資料缺口", "data gap"),
@@ -158,4 +161,6 @@ def check_report(path: Path, at: datetime | None = None) -> CheckResult:
     for name, keys in REQUIRED.items():
         if not any(k.lower() in joined for k in keys):
             res.errors.append(f"missing required section: {name}")
+    if IDEA_MODE.search(text) and not any(k in joined for k in VIABILITY):
+        res.warnings.append("idea report has no 可行性 section — run viability-check")
     return res

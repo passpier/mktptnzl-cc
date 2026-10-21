@@ -50,6 +50,8 @@ Age is measured from `data_as_of`. If that's missing, use `published_at`; if tha
 | trends, serp | 30d | warn |
 | community | 90d | warn |
 | market_report | 730d | block |
+| population | 1825d | warn |
+| policy | 180d | warn |
 
 To refresh:
 1. Run `uv run scripts/ledger.py stale <slug>` to list stale rows.

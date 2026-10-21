@@ -44,9 +44,12 @@ Collect these through store-collector / web-collector if they're missing:
 
 Don't average the scores into one number that hides a fatal dimension. A 1 on Monetization or Reachability is a no-go flag on its own.
 
+These five scores only decide whether the idea is **worth validating**. Whether it's **worth building** (unit economics, retention, build and upkeep cost, defensibility, platform and licensing risk) is the `viability-check` skill's job, in its own table.
+
 ## Related skills
 
 - `review-mining` provides the Gap evidence.
 - `demand-signals` provides the Demand evidence.
+- `viability-check` scores whether it's worth building, once these scores say it's worth validating.
 - `lean-gtm` turns the Reachability findings into a channel plan (short form in `idea`; `niche` stops at the score).
 - Global `competitor-analysis` and `keyword-research` (ASO library) go deeper on ASO once the call is GO. Their volume and difficulty fields follow "ASO library score fields" in `source-grading/references/proxies.md`.
