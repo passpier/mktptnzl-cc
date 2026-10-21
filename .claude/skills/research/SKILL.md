@@ -43,7 +43,7 @@ Write 3–5 falsifiable go/no-go thresholds into `brief.md` **before** collectin
 ## Step 3 — Plan and budget
 
 List the fetches. Free first-party sources come first, then DataForSEO only where free sources can't answer.
-- Check that the collectors can run before planning around them. If the crawl4ai MCP isn't connected, tell the user now (`scripts/setup.sh` starts the container) and say what the WebFetch fallback can't do, such as Reddit and Dcard.
+- Check that the collectors can run before planning around them. If the crawl4ai MCP isn't connected, tell the user now (`scripts/setup.sh` starts the container) and say what the WebFetch fallback can't do, such as Dcard. Reddit doesn't need crawl4ai (`community.py reddit`).
 - Estimate the DataForSEO cost from [references/dataforseo.md](references/dataforseo.md) and show the total to the user.
 - Typical study: **US$0.10–1.00**. The monthly cap is US$10, enforced by a hook.
 - Check `uv run scripts/ledger.py costs` for this month's spend.
@@ -60,8 +60,8 @@ List the fetches. Free first-party sources come first, then DataForSEO only wher
 - **web-collector** gathers everything off-store:
   - DataForSEO keyword volume and Trends
   - competitor sites, pricing, and paywalls via crawl4ai
-  - Reddit/Dcard threads via crawl4ai
-  - `community.py hn/ptt`
+  - Dcard threads via crawl4ai
+  - `community.py hn/ptt/reddit`
   - founder/official posts (tier A)
   - Google Play charts through DataForSEO, only if needed
 - Both return short digests plus E# lists. Raw data stays on disk.

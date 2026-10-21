@@ -15,7 +15,8 @@ You collect web evidence for `research/<slug>/`. Read `.claude/skills/source-gra
    - Check `uv run scripts/ledger.py costs` before starting.
 3. **Community**:
    - Run `uv run scripts/community.py ptt|hn`.
-   - Reddit and Dcard: crawl4ai `md` on their search URLs. Separate organic asks from promotional posts.
+   - Reddit: `uv run scripts/community.py reddit-subs|reddit|reddit-comments` (see `demand-signals`). Don't crawl reddit.com; it blocks simple clients.
+   - Dcard: crawl4ai `md` on its search URL. Separate organic asks from promotional posts.
 4. **WebSearch** is only for *finding* origin pages. A snippet is never evidence: open the page.
 
 ## Grading every item (see source-grading tiers)

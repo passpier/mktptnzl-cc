@@ -11,6 +11,7 @@ Ask: "Did I see this number at its origin, in this run?"
 | Competitor pricing page crawled with crawl4ai | S | Origin page, fetched now. Save the `raw` path |
 | Review text quoted from the RSS/scraper output | S | Origin content. The bias still needs a label |
 | PTT/HN post counts from `community.py` | S | Direct observation. It measures discussion, not demand |
+| Reddit thread counts/titles from `community.py reddit` | S (default backend: Reddit's own search feed). `--backend arctic`: S if ≥1 permalink confirmed on reddit.com, else B | Body, score and comment counts come from the Arctic Shift archive and are as of archive time; say so |
 | Your own landing-page / ASA test results | S | Your own measurement. It's the strongest evidence you can get |
 | Founder tweet: "we hit $20k MRR" | A | First-party statement, but self-reported and unaudited. Label it 自述 |
 | Apple developer docs on ranking factors | A | Official, dated |

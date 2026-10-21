@@ -36,7 +36,8 @@ uv run scripts/community.py ptt <slug> --query <zh term> --boards MobileComm,iOS
 uv run scripts/community.py hn  <slug> --query "<en term>"
 ```
 
-- Reddit and Dcard: web-collector uses crawl4ai `md` on search pages, e.g. `https://www.reddit.com/r/<sub>/search/?q=<term>&restrict_sr=1&sort=new` and `https://www.dcard.tw/search?query=<term>`. Record counts and dates per thread as `--kind community --tier S --group reddit|dcard`.
+- Reddit: `uv run scripts/community.py reddit-subs <slug> --subs a,b` (size, self-promo rules), then `reddit <slug> --query "<en term>" --subs a,b` (thread counts with ask/promo split), then `reddit-comments <slug> --raw <reddit raw> --apps "Name=regex,..."` (which apps get recommended in ask threads). Review the ask titles in raw; the classifier is keyword-based. The default backend obeys Reddit's feed limit (~1 request per 30s), so run it in the background; `--backend arctic` is faster when the archive's full-text search is up.
+- Dcard: web-collector uses crawl4ai `md` on `https://www.dcard.tw/search?query=<term>`. Record counts and dates per thread as `--kind community --tier S --group dcard`.
 - Separate **organic asks** ("推薦記帳 app?", "looking for an app that…") from **promotional posts** (`[iAPP]`, launch posts). Only organic asks signal unmet demand.
 - Pick relevant PTT boards by topic, e.g. Lifeismoney (money), Fitness, Baby-Mother, Japan_Travel, Soft_Job.
 

@@ -33,7 +33,7 @@ How to use them in a report:
 | App Store autocomplete | `apple.py hints` | S | Order hints at popularity; carries no volume |
 | Google search volume | DataForSEO `keywords_data/google_ads/search_volume/live` | B | **Web** demand, not in-store. zh-TW long-tail is often null or rounded |
 | Google Trends | DataForSEO `keywords_data/google_trends/explore/live`, past_5_years | B | Relative index; compare terms within one request only |
-| Community discussion | `community.py hn/ptt`; Reddit/Dcard via crawl4ai | S | Vocal minority; promotional posts inflate counts (check titles) |
+| Community discussion | `community.py hn/ptt/reddit`; Dcard via crawl4ai | S | Vocal minority; promotional posts inflate counts (check titles) |
 
 ## ASO library score fields
 
