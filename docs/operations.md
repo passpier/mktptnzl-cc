@@ -89,6 +89,8 @@ Run the tests with `uv run pytest`.
 | crawl4ai MCP can't connect | OrbStack/Docker not running. The container has `--restart unless-stopped`, so it comes back once Docker starts. Check with `docker ps --filter name=crawl4ai` |
 | DataForSEO auth error | `.env` empty, or holds the website login instead of the API login from api-access. Restart `bin/claude-mr` after editing |
 | DataForSEO call denied or asks for approval | The budget hook is working as intended (cap, per-call threshold, or blocked endpoint in `config/budget.json`). Don't route around it |
+| `apple.py reviews` returns 0 reviews for every app | The Apple reviews RSS feed sometimes answers 200 with no entries for all apps. The script still writes an n=0 row, which looks fresh, so a refresh skips it. Check one well-known app first; if it's empty too, ignore n=0 rows when deciding what to refetch, use Google Play reviews, and note the gap under 資料缺口 |
+| Reddit returns 403 or 429 | reddit.com JSON and old.reddit block simple clients (403): use `community.py reddit*`, never a crawl. The default `--backend rss` allows about 1 search per 30s (429 if faster), so run it in the background. If Arctic Shift full-text search keeps returning "Timeout. Maybe slow down a bit", stay on the RSS backend. PullPush refuses agents (429) |
 | Hook errors mentioning `uv` | `uv` not on the PATH that Claude Code inherits. Fix your shell profile |
 | `report.md` save blocked | `hooks/check_report.py` found uncited, stale, or tier-D-supported claims. Fix the claims, or move them to 資料缺口 |
 | Weekly snapshot not running | `launchctl list \| grep marketing-research`. Re-run `scripts/install-launchd.sh install` if uv or the repo moved. Read `research/_tracking/snapshot.log` |

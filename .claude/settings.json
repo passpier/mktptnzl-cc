@@ -7,6 +7,7 @@
       "Bash(uv run scripts/community.py:*)",
       "Bash(uv run scripts/ledger.py:*)",
       "Bash(uv run scripts/snapshot.py:*)",
+      "Bash(uv run scripts/econ.py:*)",
       "Bash(uv run hooks/check_report.py:*)",
       "Bash(uv run pytest:*)",
       "mcp__dataforseo__docs_index",
