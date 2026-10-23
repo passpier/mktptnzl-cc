@@ -37,7 +37,7 @@ def main() -> int:
         return 0
     print(f"source-grading check failed for {path}:\n{msg}\n"
           "Fix: cite each number as [E#] from evidence.jsonl, refresh stale rows, "
-          "or move unverifiable items to 資料缺口.", file=sys.stderr)
+          "or move unverifiable items to Data gaps.", file=sys.stderr)
     return 2
 
 

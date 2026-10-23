@@ -18,22 +18,23 @@ For each conclusion and each score:
 1. **Does the evidence actually say that?** Open the cited rows and their `raw_path`. Flag over-reach, e.g. ratings velocity presented as downloads, or Google volume presented as App Store demand.
 2. **Independence**: are the two cited groups truly independent, or do they derive from the same upstream data?
 3. **Proxies**: is every proxy labelled as a proxy? Is anything a point estimate of downloads or revenue? That's not allowed.
-4. **Market mixing**: is US data used to support a TW claim, or the other way round?
+4. **Market mixing**: is one market's data (or a global figure such as Google Play installs) used to support a claim about another market?
 5. **Bias**: is the review negativity, vocal-minority, or chart-survivorship bias acknowledged where it matters?
 6. **Kill criteria**: were the criteria in `brief.md` evaluated honestly, or quietly moved?
 
 ## Pass 3 — Devil's advocate
 
-Write the strongest case **against** the report's verdict, using only ledger evidence or clearly named missing evidence. Name ≥2 specific counter-points, for example:
+Write the strongest case **against** the report's verdict (≤3 points in quick mode), using only ledger evidence or clearly named missing evidence. Name ≥2 specific counter-points, for example:
 - a fast-growing competitor
 - a stale leader that may still hold an unassailable brand
-- a zh-TW null volume that's been read as an opportunity
+- a null search volume that's been read as an opportunity
+- a competitor or shutdown the discovery sweep should have found
 
 ## Return
 
 ```
 CHECKER: <verbatim output>
-FAIL:
+FAIL (≤5 in quick mode, most important first):
 - <location> — <problem> — <fix>
 WARN:
 - …

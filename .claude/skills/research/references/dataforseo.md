@@ -20,8 +20,8 @@ The MCP server (`dataforseo-mcp-server@3.1.3`) exposes four tools:
 
 | Market | location_code | language_code |
 |---|---|---|
-| Taiwan | 2158 | zh-TW |
-| United States | 2840 | en |
+| United States (default) | 2840 | en |
+| Taiwan (only when TW is in scope) | 2158 | zh-TW |
 
 ## Endpoints that matter for app research (all verified with docs_search before use)
 
@@ -42,10 +42,10 @@ Free scripts already cover App Store lookup, search, charts (including top-gross
 After each paid call, record what you will cite:
 
 ```bash
-uv run scripts/ledger.py add <slug> --kind keyword_volume --claim "「記帳 app」Google 月均搜尋量 TW" \
+uv run scripts/ledger.py add <slug> --kind keyword_volume --claim "'habit tracker app' Google monthly searches US" \
   --value 1900 --unit searches/mo --tier B --group dataforseo \
   --url "dataforseo:/v3/keywords_data/google_ads/search_volume/live" \
-  --method "DataForSEO google_ads search_volume (location 2158, zh-TW)" --as-of 2026-09 --cost 0.075
+  --method "DataForSEO google_ads search_volume (location 2840, en)" --as-of 2026-09 --cost 0.075
 ```
 
 Save large responses to `research/<slug>/raw/` by writing the JSON yourself, then pass `--raw`. For many keywords, store one ledger row per keyword *cluster* (value = {keyword: volume}), not one row per keyword.

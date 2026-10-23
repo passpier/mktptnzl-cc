@@ -43,7 +43,7 @@ Principle: **swap tools, keep the rules.** `source-grading`, the ledger format, 
 | Replace or add a paid API | `config/budget.json` (estimates, blocked endpoints), `.claude/settings.json` (hook `matcher` on the new tool name), `hooks/dfs_budget_guard.py` / `dfs_cost_log.py` (cost parsing), `.claude/skills/research/references/dataforseo.md` |
 | Add a free data source | New `scripts/<name>.py` that writes ledger rows through `mr/ledger.py`, like `scripts/community.py`. Add it to the permissions in `.claude/settings.json`, to `store-collector` or `web-collector`, and to `source-grading/references/proxies.md` if it's a proxy |
 | Change a freshness or tier rule | `mr/ledger.py` (TTL policy), `.claude/skills/source-grading/`, and `tests/test_grading.py` |
-| Add a market beyond TW/US | The agent instructions (`CLAUDE.md`), `research` skill (defaults), and `mr/stores.py` (`STOREFRONTS`, `GPLAY_LANG`), which limit the scripts' `--country` choices |
+| Add a market beyond US (and optional TW) | The agent instructions (`CLAUDE.md`), `research` skill (defaults), and `mr/stores.py` (`STOREFRONTS`, `GPLAY_LANG`), which limit the scripts' `--country` choices |
 
 ## What enforces the rules
 
@@ -92,5 +92,5 @@ Run the tests with `uv run pytest`.
 | `apple.py reviews` returns 0 reviews for every app | The Apple reviews RSS feed sometimes answers 200 with no entries for all apps. The script still writes an n=0 row, which looks fresh, so a refresh skips it. Check one well-known app first; if it's empty too, ignore n=0 rows when deciding what to refetch, use Google Play reviews, and note the gap under 資料缺口 |
 | Reddit returns 403 or 429 | reddit.com JSON and old.reddit block simple clients (403): use `community.py reddit*`, never a crawl. The default `--backend rss` allows about 1 search per 30s (429 if faster), so run it in the background. If Arctic Shift full-text search keeps returning "Timeout. Maybe slow down a bit", stay on the RSS backend. PullPush refuses agents (429) |
 | Hook errors mentioning `uv` | `uv` not on the PATH that Claude Code inherits. Fix your shell profile |
-| `report.md` save blocked | `hooks/check_report.py` found uncited, stale, or tier-D-supported claims. Fix the claims, or move them to 資料缺口 |
+| `report.md` save blocked | `hooks/check_report.py` found uncited, stale, or tier-D-supported claims. Fix the claims, or move them to Data gaps |
 | Weekly snapshot not running | `launchctl list \| grep marketing-research`. Re-run `scripts/install-launchd.sh install` if uv or the repo moved. Read `research/_tracking/snapshot.log` |

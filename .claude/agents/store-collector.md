@@ -18,16 +18,18 @@ Run `--help` on any script for options.
 
 ## Procedure
 
-1. Read `research/<slug>/brief.md` for terms, markets (default tw and us), and known competitors.
+1. Read `research/<slug>/brief.md` for terms, markets (default `us` only; add `tw` only if the brief lists it), depth (quick by default), and known competitors, including verified discovery leads from web-collector.
 2. For each market and each store:
-   - search the 3–5 core terms
+   - search the core terms (quick: 3; deep: 3–5)
    - App Store `hints` per term
-   - charts: `top-free` and `top-grossing` for the relevant genre id (see `apple.py --help`)
-3. Choose the top 5–8 competitors per store and market by appearance in search and charts. Run `lookup` (Apple) or `app` (Google Play) for each.
-4. Reviews for the top 3–5:
+   - charts: quick: `top-grossing` for the main genre only; deep: `top-free` and `top-grossing` for each relevant genre id (see `apple.py --help`)
+3. Choose the competitors by appearance in search and charts, plus the discovery leads you were given. Run `lookup` (Apple) or `app` (Google Play) for each.
+   - quick: ≤6 competitors in total; deep: 5–8 per store and market.
+   - A discovery lead missing from search results still gets a lookup; note that search missed it.
+4. Reviews (quick: top 2; deep: top 3–5):
    - Apple: `--pages 10`.
    - Google Play: once with `--max-stars 3 --n 300`, once unfiltered with `--n 200`.
-5. Append the competitors to `config/tracking.json`, de-duplicated, with label and country. Then run `snapshot.py take`.
+5. Deep mode, or when asked: append the competitors to `config/tracking.json`, de-duplicated, with label and country. Then run `snapshot.py take`.
 6. Before re-fetching anything, check whether `ledger.py list` already has a fresh row for it. Skip it if so.
 
 ## Rules
@@ -40,5 +42,5 @@ Run `--help` on any script for options.
 
 - A table of competitors (name, store, market, id) with their E# ids.
 - The E# list for searches, hints, charts, and reviews.
-- Failures and gaps, e.g. "no zh-TW listing for X".
+- Failures and gaps, e.g. "X has no US listing" or "lead Y not returned by search".
 - Don't paste raw data.

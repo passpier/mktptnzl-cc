@@ -5,11 +5,13 @@ Rules enforced:
      lines tagged [假設]/[門檻]/[assumption]/[threshold]).
   2. Every cited E# exists in research/<slug>/evidence.jsonl.
   3. Cited evidence past its TTL: severity=block -> error, severity=warn -> warning.
-  4. Conclusion bullets (list items under a 結論 heading): >=1 citation, a confidence label, no tier D, >=2 independent source_groups,
+  4. Conclusion bullets (list items under a Conclusion/結論 heading): >=1 citation, a confidence label, no tier D, >=2 independent source_groups,
      and >=1 fresh S/A/B row.
   5. Tier D cited outside the data-gap section -> error. Tier C cited anywhere -> warning (trace it).
-  6. Required sections: 信心 (confidence), 資料缺口 (data gaps), 驗證實驗 (validation experiments).
-  7. idea-mode reports without a 可行性 (viability) section -> warning.
+  6. Required sections: Confidence (信心), Data gaps (資料缺口), Validation experiments (驗證實驗).
+  7. idea-mode reports without a Viability (可行性) section -> warning.
+
+English and Chinese headings and tags are both accepted.
 """
 
 from __future__ import annotations
@@ -43,9 +45,9 @@ SECTION_KEYS = {
 IDEA_MODE = re.compile(r"模式\s*[:：]\s*idea|mode\s*[:：]\s*idea", re.I)
 VIABILITY = ("可行性", "viability")
 REQUIRED = {
-    "信心等級": ("信心", "confidence"),
-    "資料缺口": ("資料缺口", "data gap"),
-    "驗證實驗": ("驗證實驗", "experiment"),
+    "Confidence": ("信心", "confidence"),
+    "Data gaps": ("資料缺口", "data gap"),
+    "Validation experiments": ("驗證實驗", "experiment"),
 }
 
 
@@ -135,7 +137,7 @@ def check_report(path: Path, at: datetime | None = None) -> CheckResult:
             if st:
                 (res.errors if st.severity == "block" else res.warnings).append(f"{where}: {st.describe()} — refresh it")
             if rec["tier"] == "D" and "gaps" not in sections:
-                res.errors.append(f"{where}: [{eid}] is tier D (unverifiable) — only allowed in 資料缺口 as a lead")
+                res.errors.append(f"{where}: [{eid}] is tier D (unverifiable) — only allowed under Data gaps as a lead")
             if rec["tier"] == "C":
                 res.warnings.append(f"{where}: [{eid}] is tier C (secondhand) — trace to the original source")
 
@@ -149,7 +151,7 @@ def check_report(path: Path, at: datetime | None = None) -> CheckResult:
                 res.errors.append(f"{where}: conclusion without evidence — {snippet}")
                 continue
             if not CONFIDENCE.search(line):
-                res.errors.append(f"{where}: conclusion missing confidence label (信心: High/Med/Low) — {snippet}")
+                res.errors.append(f"{where}: conclusion missing confidence label (Confidence: High/Med/Low) — {snippet}")
             recs = [index[i] for i in ids if i in index]
             groups = {r["source_group"] for r in recs}
             if len(groups) < 2:
@@ -162,5 +164,5 @@ def check_report(path: Path, at: datetime | None = None) -> CheckResult:
         if not any(k.lower() in joined for k in keys):
             res.errors.append(f"missing required section: {name}")
     if IDEA_MODE.search(text) and not any(k in joined for k in VIABILITY):
-        res.warnings.append("idea report has no 可行性 section — run viability-check")
+        res.warnings.append("idea report has no Viability section — run viability-check")
     return res

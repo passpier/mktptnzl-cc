@@ -1,10 +1,10 @@
 """Apple App Store free first-party data -> raw cache + evidence ledger (tier S).
 
-  uv run scripts/apple.py lookup  <slug> --id 866450515 [--country tw]
-  uv run scripts/apple.py search  <slug> --term 記帳 [--country tw] [--limit 25]
-  uv run scripts/apple.py chart   <slug> --feed top-free|top-paid|top-grossing [--genre 6015] [--country tw] [--limit 100]
-  uv run scripts/apple.py reviews <slug> --id 866450515 [--country tw] [--pages 3]
-  uv run scripts/apple.py hints   <slug> --term 記帳 [--country tw]
+  uv run scripts/apple.py lookup  <slug> --id 866450515 [--country us]
+  uv run scripts/apple.py search  <slug> --term "habit tracker" [--country us] [--limit 25]
+  uv run scripts/apple.py chart   <slug> --feed top-free|top-paid|top-grossing [--genre 6015] [--country us] [--limit 100]
+  uv run scripts/apple.py reviews <slug> --id 866450515 [--country us] [--pages 3]
+  uv run scripts/apple.py hints   <slug> --term "habit tracker" [--country us]
 
 Genre ids: 6015 Finance, 6007 Productivity, 6013 Health & Fitness, 6017 Education, 6012 Lifestyle,
 6002 Utilities, 6005 Social Networking, 6023 Food & Drink, 6020 Medical, 6014 Games.
@@ -29,12 +29,12 @@ def cmd_lookup(a):
     common = dict(tier="S", source_url=url, source_group=GROUP, method="scripts/apple.py lookup",
                   data_as_of=today, raw_path=raw)
     ids = {
-        "rating": ledger.add(a.slug, kind="rating", claim=f"{m['name']} App Store {a.country.upper()} 評分數/平均評分",
+        "rating": ledger.add(a.slug, kind="rating", claim=f"{m['name']} App Store {a.country.upper()} rating count / average",
                              value={"ratings": m["ratings"], "avg": m["avg_rating"]}, unit="ratings", **common),
-        "metadata": ledger.add(a.slug, kind="metadata", claim=f"{m['name']} App Store {a.country.upper()} 版本與上架資訊",
+        "metadata": ledger.add(a.slug, kind="metadata", claim=f"{m['name']} App Store {a.country.upper()} version and release info",
                                value={k: m[k] for k in ("version", "current_version_date", "first_release", "genre", "seller")},
                                **common),
-        "price": ledger.add(a.slug, kind="price", claim=f"{m['name']} App Store {a.country.upper()} 售價",
+        "price": ledger.add(a.slug, kind="price", claim=f"{m['name']} App Store {a.country.upper()} price",
                             value={"price": m["price"], "currency": m["currency"], "formatted": m["formatted_price"]},
                             **common),
     }
@@ -47,7 +47,7 @@ def cmd_search(a):
     top = [stores.apple_metrics(r) for r in results]
     slim = [{"pos": i, "id": t["id"], "name": t["name"], "ratings": t["ratings"], "avg": t["avg_rating"],
              "updated": t["current_version_date"], "released": t["first_release"], "price": t["price"]} for i, t in enumerate(top, 1)]
-    eid = ledger.add(a.slug, kind="serp", claim=f"iTunes Search「{a.term}」{a.country.upper()} 結果", value=slim,
+    eid = ledger.add(a.slug, kind="serp", claim=f"iTunes Search '{a.term}' {a.country.upper()} results", value=slim,
                      tier="S", source_url=f"https://itunes.apple.com/search?term={a.term}&country={a.country}&entity=software",
                      source_group=GROUP, method="scripts/apple.py search", data_as_of=date.today().isoformat(),
                      raw_path=raw, note="iTunes Search API order approximates but is not identical to in-app App Store search ranking")
@@ -58,7 +58,7 @@ def cmd_chart(a):
     url, rows = stores.apple_chart(a.feed, a.country, a.limit, a.genre)
     raw = save_raw(a.slug, f"apple_chart_{a.feed}_{a.genre or 'all'}_{a.country}", rows)
     label = f"{a.feed}{' genre ' + str(a.genre) if a.genre else ''}"
-    eid = ledger.add(a.slug, kind="ranking", claim=f"App Store {a.country.upper()} {label} 榜單", value=rows,
+    eid = ledger.add(a.slug, kind="ranking", claim=f"App Store {a.country.upper()} {label} chart", value=rows,
                      tier="S", source_url=url, source_group=GROUP, method="scripts/apple.py chart",
                      data_as_of=date.today().isoformat(), raw_path=raw)
     emit({"evidence": eid, "chart": rows[:25], "total": len(rows), "raw": raw})
@@ -68,7 +68,7 @@ def cmd_reviews(a):
     url, rows = stores.apple_reviews(a.id, a.country, a.pages)
     raw = save_raw(a.slug, f"apple_reviews_{a.id}_{a.country}", rows)
     s = stores.review_summary(rows)
-    eid = ledger.add(a.slug, kind="review", claim=f"App Store {a.country.upper()} app {a.id} 最新評論樣本", value=s,
+    eid = ledger.add(a.slug, kind="review", claim=f"App Store {a.country.upper()} app {a.id} latest review sample", value=s,
                      unit="reviews", tier="S", source_url=url, source_group=GROUP, method="scripts/apple.py reviews",
                      data_as_of=s["to"], raw_path=raw,
                      note="RSS returns only the most recent ≤500 reviews; review samples skew negative")
@@ -78,7 +78,7 @@ def cmd_reviews(a):
 def cmd_hints(a):
     url, hints = stores.apple_hints(a.term, a.country)
     raw = save_raw(a.slug, f"apple_hints_{a.country}_{a.term}", hints)
-    eid = ledger.add(a.slug, kind="serp", claim=f"App Store {a.country.upper()} 搜尋提示「{a.term}」", value=hints,
+    eid = ledger.add(a.slug, kind="serp", claim=f"App Store {a.country.upper()} search hints '{a.term}'", value=hints,
                      tier="S", source_url=url, source_group="apple-hints", method="scripts/apple.py hints",
                      data_as_of=date.today().isoformat(), raw_path=raw,
                      note="unofficial endpoint; order hints at popularity but carries no volume")
@@ -91,7 +91,7 @@ def main() -> int:
     for name in ("lookup", "search", "chart", "reviews", "hints"):
         p = sub.add_parser(name)
         p.add_argument("slug")
-        p.add_argument("--country", default="tw", choices=sorted(stores.STOREFRONTS))
+        p.add_argument("--country", default="us", choices=sorted(stores.STOREFRONTS))
         if name in ("lookup", "reviews"):
             p.add_argument("--id", required=True)
         if name in ("search", "hints"):

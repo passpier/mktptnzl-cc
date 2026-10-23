@@ -47,6 +47,44 @@ def test_good_report_passes(research):
     assert res.cited == {"E1", "E2"}
 
 
+GOOD_EN = """# Report
+> Mode: idea · Market: US
+## Conclusion and confidence
+- Top competitors cluster around 18342 ratings [E1, E2], Confidence: Med
+## Competitor map
+| App | Ratings |
+|---|---|
+| X | 18342 [E1] |
+## Viability
+- Break-even needs 111 buyers a month [threshold]
+## Kill criteria check
+- ≥3 large apps in the top 10 → saturated
+## Data gaps
+- No first-party download data
+## Validation experiments
+- Landing page conversion > 5% passes
+"""
+
+
+def test_good_english_report_passes(research):
+    _row("p")
+    _row("p", kind="metadata", source_group="google-play")
+    (research / "p" / "report.md").write_text(GOOD_EN, encoding="utf-8")
+    res = check_report(research / "p" / "report.md")
+    assert res.ok, res.format()
+    assert not res.warnings, res.format()
+    assert res.cited == {"E1", "E2"}
+
+
+def test_english_conclusion_without_confidence_blocked(research):
+    _row("p")
+    _row("p", source_group="google-play")
+    report = GOOD_EN.replace(", Confidence: Med", "")
+    (research / "p" / "report.md").write_text(report, encoding="utf-8")
+    res = check_report(research / "p" / "report.md")
+    assert any("missing confidence label" in e for e in res.errors)
+
+
 def test_uncited_number_blocked(research):
     _row("p")
     _row("p", source_group="google-play")
@@ -83,7 +121,7 @@ def test_missing_sections_and_unknown_id(research):
     res = check_report(research / "p" / "report.md")
     text = "\n".join(res.errors)
     assert "[E9] not found" in text
-    for name in ("信心等級", "資料缺口", "驗證實驗"):
+    for name in ("Confidence", "Data gaps", "Validation experiments"):
         assert f"missing required section: {name}" in text
 
 
@@ -110,11 +148,11 @@ def test_idea_report_without_viability_warns(research):
     path = research / "p" / "report.md"
     path.write_text(GOOD.replace("# 報告", "# 報告\n> 模式：idea"), encoding="utf-8")
     res = check_report(path)
-    assert res.ok and any("可行性" in w for w in res.warnings)
+    assert res.ok and any("Viability" in w for w in res.warnings)
     path.write_text(GOOD.replace("# 報告", "# 報告\n> 模式：idea") + "## 可行性評估\n- 待實驗\n", encoding="utf-8")
-    assert not any("可行性" in w for w in check_report(path).warnings)
+    assert not any("Viability" in w for w in check_report(path).warnings)
     path.write_text(GOOD, encoding="utf-8")
-    assert not any("可行性" in w for w in check_report(path).warnings)
+    assert not any("Viability" in w for w in check_report(path).warnings)
 
 
 def test_population_and_policy_ttl(research):

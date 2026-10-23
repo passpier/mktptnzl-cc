@@ -45,7 +45,7 @@ def cmd_hn(a):
                  "url": f"https://news.ycombinator.com/item?id={h['objectID']}"} for h in top],
     }
     raw = save_raw(a.slug, f"hn_{a.query}", {"params": params, "stories": hits, "comments_nbHits": comments.get("nbHits")})
-    eid = ledger.add(a.slug, kind="community", claim=f"Hacker News「{a.query}」近 {a.days} 天討論量", value=value,
+    eid = ledger.add(a.slug, kind="community", claim=f"Hacker News '{a.query}' posts, last {a.days} days", value=value,
                      unit="posts", tier="S", source_url=f"{HN}?query={a.query}&tags=story", source_group="hackernews",
                      method="scripts/community.py hn", data_as_of=date.today().isoformat(), raw_path=raw,
                      note="HN skews to developers/early adopters; measures discussion volume, not demand")
@@ -96,7 +96,7 @@ def cmd_ptt(a):
         "top": sorted(posts, key=lambda p: p["push"], reverse=True)[:10],
     }
     raw = save_raw(a.slug, f"ptt_{a.query}", posts)
-    eid = ledger.add(a.slug, kind="community", claim=f"PTT「{a.query}」近 {a.days} 天討論量（{a.boards}）", value=value,
+    eid = ledger.add(a.slug, kind="community", claim=f"PTT '{a.query}' posts, last {a.days} days ({a.boards})", value=value,
                      unit="posts", tier="S", source_url=f"https://www.ptt.cc/bbs/{a.boards.split(',')[0]}/search?q={a.query}",
                      source_group="ptt", method="scripts/community.py ptt", data_as_of=date.today().isoformat(),
                      raw_path=raw, note=f"capped at {a.pages} search pages per board; vocal-minority sample")
@@ -151,7 +151,7 @@ def cmd_reddit(a):
     tier = "S" if a.backend == "rss" or verified["exists"] else "B"
     raw = save_raw(a.slug, f"reddit_{a.query}", {"query": a.query, "subs": a.subs, "since": since.isoformat(),
                                                  "verified": verified, "posts": rows})
-    eid = ledger.add(a.slug, kind="community", claim=f"Reddit「{a.query}」近 {a.days} 天討論串（{a.subs}）", value=value,
+    eid = ledger.add(a.slug, kind="community", claim=f"Reddit '{a.query}' threads, last {a.days} days ({a.subs})", value=value,
                      unit="threads", tier=tier, source_url=f"https://www.reddit.com/r/{a.subs.split(',')[0]}/search/?q={a.query}",
                      source_group="reddit", method=f"scripts/community.py reddit --backend {a.backend} "
                      + ("(reddit.com search feed; body/score/num_comments from Arctic Shift id lookup)" if a.backend == "rss"
@@ -184,8 +184,8 @@ def cmd_reddit_comments(a):
         "topic_mentions": reddit.count_mentions(bodies, reddit.DEFAULT_TOPICS),
     }
     raw = save_raw(a.slug, f"reddit_comments_{src['query']}", threads)
-    scope = f"{len(ids)} 個指定" if ids else a.classes
-    eid = ledger.add(a.slug, kind="community", claim=f"Reddit「{src['query']}」{scope} 串留言中的 App 與主題提及",
+    scope = f"{len(ids)} selected" if ids else a.classes
+    eid = ledger.add(a.slug, kind="community", claim=f"Reddit '{src['query']}' app and topic mentions in comments ({scope} threads)",
                      value=value, unit="threads", tier="S", source_url=posts[0]["url"] if posts else "https://www.reddit.com",
                      source_group="reddit", method="scripts/community.py reddit-comments (Arctic Shift comment trees, regex)",
                      data_as_of=date.today().isoformat(), raw_path=raw,
@@ -209,7 +209,7 @@ def cmd_reddit_subs(a):
             "promo_rules": [{"rule": x.get("short_name"), "text": (x.get("description") or "")[:400]}
                             for x in r if _PROMO_RULE.search(f"{x.get('short_name')} {x.get('description')}")]}
     raw = save_raw(a.slug, "reddit_subs", {"subreddits": info, "rules": rules})
-    eid = ledger.add(a.slug, kind="community", claim=f"Reddit 子版規模與自我宣傳版規（{a.subs}）", value=value,
+    eid = ledger.add(a.slug, kind="community", claim=f"Reddit subreddit size and self-promotion rules ({a.subs})", value=value,
                      unit="subscribers", tier="S", source_url=f"https://www.reddit.com/r/{names[0]}/about/rules",
                      source_group="reddit", method="scripts/community.py reddit-subs (Arctic Shift subreddits + rules)",
                      data_as_of=date.today().isoformat(), raw_path=raw,

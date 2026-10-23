@@ -151,10 +151,10 @@ def render_appendix(slug: str, cited: set[str] | None = None) -> str:
     rows = load(slug)
     if cited is not None:
         rows = [r for r in rows if r["id"] in cited]
-    out = ["| ID | 等級 | 主張 | 值 | 資料時點 | 抓取時間 | 來源 |", "|---|---|---|---|---|---|---|"]
+    out = ["| ID | Tier | Claim | Value | Data as of | Retrieved | Source |", "|---|---|---|---|---|---|---|"]
     for r in rows:
         v = r["value"] if isinstance(r["value"], str) else json.dumps(r["value"], ensure_ascii=False)
-        v = v if len(v) <= 100 else v[:100] + "…（全文見 evidence.jsonl）"
+        v = v if len(v) <= 100 else v[:100] + "… (full value in evidence.jsonl)"
         val = f"{v}{(' ' + r['unit']) if r.get('unit') else ''}".replace("|", "\\|")
         as_of = r.get("data_as_of") or r.get("published_at") or "—"
         out.append(

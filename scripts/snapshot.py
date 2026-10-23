@@ -1,10 +1,10 @@
 """Weekly competitor snapshots (free APIs) -> research/_tracking/<store>-<id>-<country>/<date>.json
 
   uv run scripts/snapshot.py take [--config config/tracking.json]
-  uv run scripts/snapshot.py diff --app apple:866450515:tw [--slug <slug>]   # --slug records the velocity as evidence
+  uv run scripts/snapshot.py diff --app apple:866450515:us [--slug <slug>]   # --slug records the velocity as evidence
 
 A single snapshot cannot show momentum; rating-count velocity across snapshots is the cheapest
-first-party proxy for download momentum. It is a proxy: report it as "評分增速", never as downloads.
+first-party proxy for download momentum. It is a proxy: report it as "rating velocity", never as downloads.
 """
 
 import argparse
@@ -71,7 +71,7 @@ def cmd_diff(a):
     if a.slug:
         url = stores.apple_lookup_url(app_id, country) if store == "apple" else stores.gplay_url(app_id, country)
         v["evidence"] = ledger.add(
-            a.slug, kind="rating", claim=f"{v['name']} {store} {country.upper()} 評分增速（{v['from']}→{v['to']}）",
+            a.slug, kind="rating", claim=f"{v['name']} {store} {country.upper()} rating velocity ({v['from']}→{v['to']})",
             value={k: v[k] for k in v if k != "series"}, unit="ratings/week", tier="S", source_url=url,
             source_group=f"{store}-snapshots", method="scripts/snapshot.py diff (derived from dated snapshots)",
             data_as_of=v["to"], raw_path=str(_key(store, app_id, country).relative_to(ROOT)),
